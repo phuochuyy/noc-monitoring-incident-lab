@@ -1,0 +1,21 @@
+# TNS aliases for the Oracle checks run by the host agent (Plugins.Oracle.ResolveTNS=true).
+# Same targets as oracle-dba-automation-cdc/02-python/targets.yml; RAC aliases list both nodes so a
+# stopped node does not make the database look down. No credentials here.
+LAB_ORCL =
+  (DESCRIPTION = (CONNECT_TIMEOUT = 3)(TRANSPORT_CONNECT_TIMEOUT = 3)(FAILOVER = on)
+    (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.104.10)(PORT = 1521))
+                    (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.104.11)(PORT = 1521)))
+    (CONNECT_DATA = (SERVICE_NAME = orcl.rac)))
+LAB_ORCL_STB =
+  (DESCRIPTION = (CONNECT_TIMEOUT = 3)(TRANSPORT_CONNECT_TIMEOUT = 3)(FAILOVER = on)
+    (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.105.10)(PORT = 1521))
+                    (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.105.11)(PORT = 1521)))
+    (CONNECT_DATA = (SERVICE_NAME = orcl_stb.rac)))
+LAB_ORCL3 =
+  (DESCRIPTION = (CONNECT_TIMEOUT = 3)(TRANSPORT_CONNECT_TIMEOUT = 3)
+    (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.106.10)(PORT = 1521))
+    (CONNECT_DATA = (SERVICE_NAME = orcl3.rac)))
+LAB_ORCL3_STB =
+  (DESCRIPTION = (CONNECT_TIMEOUT = 3)(TRANSPORT_CONNECT_TIMEOUT = 3)
+    (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.107.10)(PORT = 1521))
+    (CONNECT_DATA = (SERVICE_NAME = orcl3_stb.rac)))

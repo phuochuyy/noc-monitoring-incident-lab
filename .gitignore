@@ -6,3 +6,4 @@ lab.env
 01-stack/data/
 # interview preparation notes: kept on my machine only
 INTERVIEW.md
+__pycache__/

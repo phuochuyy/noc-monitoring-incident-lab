@@ -1,0 +1,62 @@
+# Zabbix 7.0 LTS on the KVM host, rootless Podman (podman-compose).
+# RAM is the scarce resource on this host (23.8 GB, VMs take 14-20 GB): every container has a limit.
+# Secrets come from ../lab.env (git-ignored); see ../lab.env.example.
+
+services:
+  postgres:
+    image: docker.io/library/postgres:16.15-alpine
+    container_name: zbx-postgres
+    env_file: ../lab.env
+    environment:
+      POSTGRES_DB: zabbix
+      POSTGRES_USER: zabbix
+    command: >
+      postgres -c shared_buffers=128MB -c effective_cache_size=256MB
+               -c work_mem=4MB -c max_connections=60
+    volumes:
+      - zbx-pgdata:/var/lib/postgresql/data
+    mem_limit: 512m
+    restart: unless-stopped
+
+  server:
+    image: docker.io/zabbix/zabbix-server-pgsql:alpine-7.0.32
+    container_name: zbx-server
+    depends_on: [postgres]
+    env_file: ../lab.env
+    environment:
+      DB_SERVER_HOST: postgres
+      POSTGRES_DB: zabbix
+      POSTGRES_USER: zabbix
+      ZBX_CACHESIZE: 64M
+      ZBX_STARTPOLLERS: 5
+      ZBX_STARTPINGERS: 2
+      ZBX_STARTDISCOVERERS: 1
+      ZBX_HOUSEKEEPINGFREQUENCY: 1
+    ports:
+      # active agents on the VMs connect to the host's bridge IPs (192.168.104-107.1)
+      - "10051:10051"
+    # ICMP checks (fping) need raw sockets inside the rootless container; without it every ping item fails
+    # with "Operation not permitted"
+    cap_add: [NET_RAW]
+    mem_limit: 512m
+    restart: unless-stopped
+
+  web:
+    image: docker.io/zabbix/zabbix-web-nginx-pgsql:alpine-7.0.32
+    container_name: zbx-web
+    depends_on: [postgres, server]
+    env_file: ../lab.env
+    environment:
+      DB_SERVER_HOST: postgres
+      POSTGRES_DB: zabbix
+      POSTGRES_USER: zabbix
+      ZBX_SERVER_HOST: server
+      PHP_TZ: Asia/Ho_Chi_Minh
+    ports:
+      # browser on the host only
+      - "127.0.0.1:8080:8080"
+    mem_limit: 256m
+    restart: unless-stopped
+
+volumes:
+  zbx-pgdata:
