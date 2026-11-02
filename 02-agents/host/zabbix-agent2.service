@@ -1,0 +1,16 @@
+# systemd --user unit: ~/.config/systemd/user/zabbix-agent2.service (installed by install-host-agent.sh)
+[Unit]
+Description=Zabbix agent 2 (lab user, active checks)
+After=network-online.target
+
+[Service]
+Type=simple
+Environment=LD_LIBRARY_PATH=/home/huy/work/tools/instantclient_23_26
+Environment=TNS_ADMIN=/home/huy/work/noc-monitoring-incident-lab/03-oracle/tns
+ExecStartPre=/usr/bin/mkdir -p /home/huy/.local/state/zabbix
+ExecStart=/usr/sbin/zabbix_agent2 -f -c /home/huy/work/noc-monitoring-incident-lab/02-agents/host/zabbix_agent2.conf
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

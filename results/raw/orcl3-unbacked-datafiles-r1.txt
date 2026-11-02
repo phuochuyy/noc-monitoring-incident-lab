@@ -1,0 +1,9 @@
+-- datafiles with no level 0 base (same rule as lab_backup.sql), read-only query on orcl3, sysdba
+
+     FILE# PDB	      NAME											      CREATED
+---------- ---------- ----------------------------------------------------------------------------------------------- ----------------
+	34 PERF       /u02/oradata/ORCL3/ORCL3/5ED1DBF4AB1AEF26E0630A6AA8C05929/datafile/o1_mf_audit_tb_ogh97mt3_.dbf 2026-11-02 03:45
+
+TAKEN
+-------------------
+2026-11-02 22:18:30
