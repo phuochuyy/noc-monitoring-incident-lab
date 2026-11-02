@@ -1,0 +1,8 @@
+# credentials: local only
+lab.env
+*.env
+!lab.env.example
+# container volumes and runtime data
+01-stack/data/
+# interview preparation notes: kept on my machine only
+INTERVIEW.md
